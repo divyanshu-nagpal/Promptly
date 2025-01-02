@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  /* min-height: 100vh; */
+}
+
+main {
+  margin-top: 0px; /* Match the header height */
+  flex: 1;
+}
+
