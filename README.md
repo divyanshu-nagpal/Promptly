@@ -20,7 +20,7 @@ Promptly is a dynamic web platform built on the MERN stack (MongoDB, Express, Re
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/promptly.git
+   git clone https://github.com/divyanshu-nagpal/promptly.git
    cd promptly
    ```
 
