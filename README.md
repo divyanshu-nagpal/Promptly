@@ -26,12 +26,12 @@ Promptly is a dynamic web platform built on the MERN stack (MongoDB, Express, Re
 
 2. Install dependencies for both the client and server:
    ```bash
-   # Install server dependencies
-   cd server
+   # Install Backend dependencies
+   cd Backend
    npm install
 
-   # Install client dependencies
-   cd ../client
+   # Install Frontend dependencies
+   cd ../Frontend
    npm install
    ```
 
@@ -46,7 +46,7 @@ Promptly is a dynamic web platform built on the MERN stack (MongoDB, Express, Re
 4. Run the development environment:
    ```bash
    # Start the server
-   cd server
+   cd Backend
    npm run dev
 
    # Start the client
@@ -60,27 +60,14 @@ Promptly is a dynamic web platform built on the MERN stack (MongoDB, Express, Re
 
 ```
 promptly/
-├── client/       # Frontend code (React)
-├── server/       # Backend code (Express)
+├── Frontend/       # Frontend code (React)
+├── Backend/       # Backend code (Express)
 ├── README.md     # Project documentation
 └── .gitignore    # Git ignored files
 ```
 
-## Contributing
-
-Contributions are welcome! To contribute:
-
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-name`.
-3. Make your changes and commit: `git commit -m 'Add feature-name'`.
-4. Push to the branch: `git push origin feature-name`.
-5. Create a pull request.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
-
-- Built as part of the **MCS Innovators Arena 2025** hackathon.
-- Special thanks to contributors and the Promptly community!
