@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-2xl font-bold text-blue-600 mb-3">Promptable</h3>
+            <h3 className="text-2xl font-bold text-blue-600 mb-3">Promptly</h3>
             <p className="text-gray-500 mb-4">
               Your go-to platform for discovering and sharing the perfect AI prompts.
             </p>
@@ -80,7 +80,7 @@ const Footer = () => {
         <div className="pt-6 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 text-sm mb-3 md:mb-0">
-              © {new Date().getFullYear()} Promptable. All rights reserved.
+              © {new Date().getFullYear()} Promptly. All rights reserved.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-500 hover:text-blue-600 text-sm transition-colors">

@@ -9,6 +9,10 @@ import Footer from './components/Footer';
 import CommunityPage from './pages/communityPage/CommunityPage';
 import ProfilePage from './pages/profilePage/ProfilePage';
 import VerifyPage from './pages/VerificationPage';
+import SettingsPage from './pages/SettingsPage';
+import ReportsPage from './pages/ReportsPage';
+import AdminPanel from './pages/AdminPanel';
+import AboutUs from './pages/AboutUs';
 
 const App = () => {
     return (
@@ -24,6 +28,11 @@ const App = () => {
                     <Route path="/community" element={<CommunityPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/verify-email/:verificationtoken" element={<VerifyPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/reports" element={<ReportsPage />} />
+                    <Route path="/admin-panel" element={<AdminPanel />} />
+                    <Route path="/about" element={<AboutUs />} />
+
                 </Routes>
             </main>
             <FooterWrapper />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import UserPrompts from './components/UserPrompts';
+import { User, Calendar, FileText, ChevronRight, Camera } from 'lucide-react';
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
@@ -11,7 +12,7 @@ const ProfilePage = () => {
       try {
         const response = await axios.get('/api/user/profile', {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure you're sending the auth token
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
         setUserData(response.data);
@@ -24,31 +25,154 @@ const ProfilePage = () => {
 
     fetchProfile();
   }, []);
-  console.log(userData);
 
-  if (loading) return <p className="text-center text-gray-500">Loading...</p>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-950">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-75 mb-4"></div>
+          <p className="text-gray-400">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const getRoleBadgeStyle = (role) => {
+    if (role === 'moderator') return 'bg-blue-900/30 border-blue-800/50 text-blue-400';
+    if (role === 'admin') return 'bg-purple-900/30 border-purple-800/50 text-purple-400';
+    return 'bg-green-900/30 border-green-800/50 text-green-400';
+  };
+
   return (
-    <div className="profile-page max-w-4xl mx-auto p-6">
-      {/* User Details Section */}
-      <div className="user-details bg-white shadow-md rounded-lg p-6 mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">{userData.user.username}</h1>
-        <p className="text-gray-600">Email: <span className="font-medium">{userData.user.email}</span></p>
-        <p className="text-gray-600">Total Posts: <span className="font-medium">{userData.user.totalPrompts}</span></p>
+    <div className="min-h-screen bg-gray-950 py-12 relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0 bg-gray-950">
+        <div className="absolute top-0 left-0 w-full h-full opacity-30 bg-[radial-gradient(circle_at_30%_20%,#2563eb,transparent_40%)]"></div>
+        <div className="absolute bottom-0 right-0 w-full h-full opacity-20 bg-[radial-gradient(circle_at_70%_80%,#8b5cf6,transparent_40%)]"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-5 bg-[radial-gradient(circle_at_50%_50%,#ffffff,transparent_70%)]"></div>
       </div>
-
-      User Posts Section
-      <div className="user-posts">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Your Posts</h2>
-        {userData.user.totalPrompts > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {userData.posts.map((post) => (
-              <UserPrompts key={post._id} prompt={post} />
-            ))}
+      
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBoMzB2MzBIMzB6TTAgMGgzMHYzMEgweiIgZmlsbD0iIzIwMjAyMCIgZmlsbC1vcGFjaXR5PSIuMDUiLz48L2c+PC9zdmc+')] opacity-10"></div>
+      
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
+        {/* Welcome Badge */}
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-900/30 text-blue-400 text-sm border border-blue-800/50">
+            <span>Your Profile</span>
           </div>
-        ) : (
-          <p className="text-gray-500">You haven't uploaded any posts yet.</p>
-        )}
+        </div>
+        
+        {/* Header Section with Gradient Border */}
+        <div className="relative group mb-10">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+          <div className="relative bg-gray-900 rounded-xl p-8 border border-gray-800 backdrop-blur-sm">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div>
+                <div className="flex items-center">
+                  <h1 className="text-3xl font-bold text-white">
+                    {userData.user.username}
+                  </h1>
+                  
+                  {userData.user.role !== 'user' && (
+                    <span className={`ml-3 px-3 py-1 text-xs font-medium rounded-full border ${getRoleBadgeStyle(userData.user.role)}`}>
+                      {userData.user.role.toUpperCase()}
+                    </span>
+                  )}
+                </div>
+                
+                <div className="mt-4 flex flex-col sm:flex-row gap-4">
+                  <div className="flex items-center text-gray-400">
+                    <User size={16} className="mr-2 text-blue-400" />
+                    <span>{userData.user.email}</span>
+                  </div>
+                  
+                  <div className="flex items-center text-gray-400">
+                    <FileText size={16} className="mr-2 text-purple-400" />
+                    <span>{userData.user.totalPrompts} Posts</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* User Profile Image - Replacing the button */}
+              <div className="relative group cursor-pointer">
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-300"></div>
+                {userData.user.profilePicture ? (
+                  <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-gray-800">
+                    <img 
+                      src={userData.user.profilePicture} 
+                      alt={`${userData.user.username}'s profile`} 
+                      className="w-full h-full object-cover"
+                    />
+                   
+                  </div>
+                ) : (
+                  <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gradient-to-br from-blue-800/30 to-purple-800/30 border-2 border-gray-800 flex items-center justify-center">
+                    <User size={24} className="text-gray-400" />
+                    
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* User Posts Section */}
+        <div className="mt-12">
+          <div className="flex items-center mb-6">
+            <div className="bg-blue-900/30 rounded-full p-2 mr-3 border border-blue-800/50">
+              <Calendar size={18} className="text-blue-400" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Your Content</h2>
+          </div>
+          
+          {userData.user.totalPrompts > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {userData.posts.map((post) => (
+                <div 
+                  key={post._id} 
+                  className="relative group"
+                >
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                  <div className="relative bg-gray-900 rounded-lg p-5 h-full border border-gray-800">
+                    <UserPrompts prompt={post} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="relative group">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative bg-gray-900 rounded-xl p-8 text-center border border-gray-800">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center mx-auto mb-4 border border-gray-800">
+                  <FileText size={24} className="text-gray-400" />
+                </div>
+                <p className="text-gray-400 mb-4">You haven't uploaded any posts yet.</p>
+                <button 
+                onClick={() => window.location.href = '/add-prompt'} 
+                className="py-3 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105"
+              >
+                Create Your First Post
+              </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+      
+      {/* Custom animation styles */}
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 };

@@ -1,0 +1,6 @@
+bcrypt
+express 
+mongoose 
+cors 
+dotenv
+cloudinary

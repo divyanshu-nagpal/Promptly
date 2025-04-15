@@ -5,6 +5,9 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const promptRoutes = require('./routes/promptRoutes');
 const userRoutes = require('./routes/userRoutes');
+const commentRoutes = require('./routes/commentRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 
 const app = express();
@@ -29,7 +32,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/prompts', promptRoutes);
 app.use('/api/auth/prompts', promptRoutes);
 app.use('/api/user', userRoutes);
-
+app.use('/api/comments', commentRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/reports', reportRoutes);
 
 
 

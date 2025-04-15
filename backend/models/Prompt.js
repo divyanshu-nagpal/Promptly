@@ -44,6 +44,10 @@ const promptSchema = new mongoose.Schema(
             ref: 'User', 
             default: [] 
         },
+        commentsCount: { 
+            type: Number, 
+            default: 0 
+        },
     },
     { timestamps: true }
 );

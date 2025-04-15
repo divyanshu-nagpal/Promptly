@@ -2,7 +2,7 @@ const User = require('../models/User');
 const Prompt = require('../models/Prompt');
 const getUserProfile = async (req, res) => {
   try {
-    const userId = req.user.user.id; // Get user ID from auth middleware
+    const userId = req?.user?.id; // Get user ID from auth middleware
 
     // Fetch user details excluding sensitive fields like password
     const user = await User.findById(userId).select('-password');
@@ -18,7 +18,7 @@ const getUserProfile = async (req, res) => {
 
 const getBookmarkedPrompts = async (req, res) => {
   try {
-    const userId = req.user.user.id;
+    const userId = req?.user?.id;
 
     const user = await User.findById(userId).select('bookmarkedPrompts');
     if (!user) {

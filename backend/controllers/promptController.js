@@ -6,15 +6,15 @@ require('dotenv').config();
 // Get all prompts
 const getAllPrompts = async (req, res) => {
   try {
-    const userId = req.user?.user?.id;
+    const userId = req?.user?.id;
 
     // Fetch the user's bookmarked prompts
     const user = await User.findById(userId).select('bookmarkedPrompts');
     const bookmarkedPromptIds = user?.bookmarkedPrompts || [];
 
     // Fetch all prompts
-    const prompts = await Prompt.find().populate('user', 'username totalPrompts profilePicture');
-
+    const prompts = await Prompt.find().sort({ _id: -1 }).populate('user', 'username totalPrompts profilePicture');
+    
     // Map through prompts and add isLiked and isBookmarked
     const promptsStatus = prompts.map((prompt) => ({
       ...prompt.toObject(),
@@ -49,10 +49,10 @@ const createPrompt = async (req, res) => {
         input,
         output: imageUrl ? `${output} ${process.env.OUTPUT_SPLIT} ${imageUrl}` : output, // Store text and image URL
         aiModel,
-        user: req.user.user.id,
+        user: req?.user?.id,
       });
 
-      await User.findByIdAndUpdate(req.user.user.id, { $inc: { totalPrompts: 1 } });
+      await User.findByIdAndUpdate(req?.user?.id, { $inc: { totalPrompts: 1 } });
   
       const savedPrompt = await newPrompt.save();
       res.status(201).json(savedPrompt);
@@ -67,7 +67,7 @@ const createPrompt = async (req, res) => {
 const likePrompt = async (req, res) => {
     try {
       const { id } = req.params; // Prompt ID
-      const userId = req.user.user.id; // User ID from token
+      const userId = req?.user?.id; // User ID from token
     //   console.log(userId);
     //   console.log(id);
   
@@ -139,7 +139,7 @@ const downvotePrompt = async (req, res) => {
 const bookmarkPrompt = async (req, res) => {
   try {
       const { id } = req.params; // Prompt ID
-      const userId = req.user.user.id; // User ID from token
+      const userId = req?.user?.id; // User ID from token
 
       if (!userId) {
           return res.status(400).json({ message: 'User ID is missing or invalid' });
@@ -181,10 +181,21 @@ const bookmarkPrompt = async (req, res) => {
   }
 };
 
-  
+
+const getPromptById = async (req, res) => {
+  try {
+    const prompt = await Prompt.findById(req.params.id);
+    if (!prompt) return res.status(404).json({ message: 'Prompt not found' });
+    // console.log(prompt);
+    res.json(prompt);
+  } catch (error) {
+    console.error('Error fetching prompt:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 
-module.exports = { getAllPrompts, createPrompt, likePrompt, upvotePrompt, downvotePrompt, bookmarkPrompt  };
+module.exports = { getAllPrompts, createPrompt, likePrompt, upvotePrompt, downvotePrompt, bookmarkPrompt, getPromptById };
 
 
 
