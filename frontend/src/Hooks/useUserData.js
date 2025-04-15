@@ -1,15 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const useUserData = () => {
     const navigate = useNavigate();
-    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
-    
     const token = localStorage.getItem("token");
+    const queryClient = useQueryClient();
+
     
-    const { data: userData, isLoading, error } = useQuery({
+    // Main query to fetch user data
+    const { data: userData, isLoading, error, refetch } = useQuery({
       queryKey: ["userData"],
       queryFn: async () => {
         if (!token) {
@@ -20,20 +21,12 @@ export const useUserData = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         
-        // Log the response to see what's coming from the API
-        console.log("API Response:", response.data);
-        
-        // Return the normalized user data
         return response.data.user || response.data;
-      },
-      onSuccess: (data) => {
-        setIsAuthenticated(true);
       },
       onError: (error) => {
         console.error('Error fetching user data:', error);
         if (error.response?.status === 401) {
           localStorage.removeItem('token');
-          setIsAuthenticated(false);
           navigate('/login');
         }
       },
@@ -41,15 +34,19 @@ export const useUserData = () => {
         if (error?.response?.status === 401) return false;
         return failureCount < 3;
       },
-      enabled: !!token,
+      enabled: !!token, // Only run query if token exists
     });
+    
+    const isAuthenticated = !!token && !!userData;
     
     const logout = useCallback(() => {
       localStorage.removeItem('token');
-      setIsAuthenticated(false);
+      
+      // Clear the React Query cache for user data
+      queryClient.removeQueries(["userData"]);
+      
       navigate('/login');
     }, [navigate]);
     
-    // Return the userData directly from useQuery
     return { user: userData, isAuthenticated, isLoading, error, logout };
   };

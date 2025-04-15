@@ -35,6 +35,7 @@ const LoginPage = () => {
                 localStorage.setItem("token", response.data.token);
                 // Add this line to invalidate and refetch user data
                 queryClient.invalidateQueries(["userData"]);
+                queryClient.setQueryData(["isAuthenticated"], true);
                 navigate("/");
             }
         } catch (error) {
