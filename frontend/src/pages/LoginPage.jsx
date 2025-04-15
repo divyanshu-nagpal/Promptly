@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Key, AlertCircle } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
@@ -11,6 +13,8 @@ const LoginPage = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -29,6 +33,8 @@ const LoginPage = () => {
                 setError("Enter your OTP sent to your email.");
             } else {
                 localStorage.setItem("token", response.data.token);
+                // Add this line to invalidate and refetch user data
+                queryClient.invalidateQueries(["userData"]);
                 navigate("/");
             }
         } catch (error) {
