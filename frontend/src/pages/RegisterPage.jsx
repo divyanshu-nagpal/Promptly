@@ -15,6 +15,7 @@ const RegisterPage = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         setLoading(true);
+    
         const formData = new FormData();
         formData.append('username', username);
         formData.append('email', email);
@@ -22,20 +23,24 @@ const RegisterPage = () => {
         if (profilePhoto) {
             formData.append('profilePhoto', profilePhoto);
         }
-
+    
         try {
             const response = await axios.post('/api/auth/register', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            navigate('/');
+    
+            if (response.status === 200) {
+                navigate('/check-email');
+            }
         } catch (error) {
             setError('User already exists or invalid input');
         } finally {
             setLoading(false);
         }
     };
+    
 
     const handlePhotoChange = (e) => {
         const file = e.target.files[0];

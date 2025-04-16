@@ -15,10 +15,23 @@ const ReportsPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalAction, setModalAction] = useState(null);
   const [modalTarget, setModalTarget] = useState(null);
+  const [contentLoaded, setContentLoaded] = useState(false);
 
   useEffect(() => {
     fetchReports();
   }, []);
+
+  // Add a second useEffect to handle animations after loading completes
+  useEffect(() => {
+    if (!loading) {
+      // Set a small delay before showing content with animations
+      const timer = setTimeout(() => {
+        setContentLoaded(true);
+      }, 300);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
 
   const fetchReports = async () => {
     try {
@@ -158,6 +171,15 @@ const ReportsPage = () => {
     }
   };
 
+  // Simple loading spinner
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-t-blue-500 border-r-purple-500 border-b-blue-500 border-l-purple-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background elements */}
@@ -239,7 +261,7 @@ const ReportsPage = () => {
         </div>
       )}
 
-      <div className="max-w-5xl mx-auto relative z-10 w-full">
+      <div className={`max-w-5xl mx-auto relative z-10 w-full ${contentLoaded ? 'animate-fade-in' : 'opacity-0'}`}>
         {/* Header with title and badge */}
         <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 mb-12">
           <div className="flex justify-center">
@@ -322,13 +344,9 @@ const ReportsPage = () => {
         )}
 
         {/* Reports List */}
-        {loading ? (
-          <div className="flex items-center justify-center p-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          </div>
-        ) : Object.keys(groupedReports).length > 0 ? (
+        { Object.keys(groupedReports).length > 0 ? (
           <div className="space-y-6">
-            {Object.entries(groupedReports).map(([targetId, group]) => {
+            {Object.entries(groupedReports).map(([targetId, group], index) => {
               // Aggregate report reasons
               const reasonCount = {};
               group.reports.forEach((report) => {
@@ -338,7 +356,11 @@ const ReportsPage = () => {
               });
 
               return (
-                <div key={targetId} className="relative group">
+                <div 
+                  key={targetId} 
+                  className="relative group animate-fade-in" 
+                  style={{ animationDelay: `${index * 150}ms` }}
+                >
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
                   <div className="relative bg-gray-900 rounded-xl border border-gray-800 backdrop-blur-sm p-6">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
@@ -369,7 +391,6 @@ const ReportsPage = () => {
                           } Report{group.reports.reduce((total, report) => total + (report.reason?.length || 0), 0) !== 1 ? 's' : ''}
                         </span>
                       </div>
-
                     </div>
 
                     {/* Content Display */}
@@ -469,10 +490,11 @@ const ReportsPage = () => {
             })}
           </div>
         ) : (
-          <div className="relative group">
+          <div className="relative group animate-fade-in">
             <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
             <div className="relative bg-gray-900 rounded-xl border border-gray-800 backdrop-blur-sm py-12 px-6 text-center">
               <div className="mx-auto w-16 h-16 bg-blue-900/30 rounded-full flex items-center justify-center mb-4">
+                <Check className="h-8 w-8 text-blue-400" />
               </div>
               <h3 className="text-xl font-medium text-white mb-2">All Clear!</h3>
               <p className="text-gray-400">No reports found. Everything looks good.</p>

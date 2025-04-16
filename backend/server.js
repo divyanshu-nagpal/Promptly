@@ -8,7 +8,7 @@ const userRoutes = require('./routes/userRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const reportRoutes = require('./routes/reportRoutes');
-
+const eventRoutes = require('./routes/eventRoutes');
 
 const app = express();
 
@@ -35,6 +35,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/events', eventRoutes);
 
 
 

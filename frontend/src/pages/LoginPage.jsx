@@ -36,7 +36,10 @@ const LoginPage = () => {
                 // Add this line to invalidate and refetch user data
                 queryClient.invalidateQueries(["userData"]);
                 queryClient.setQueryData(["isAuthenticated"], true);
-                navigate("/");
+                // Add this timeout before navigation
+                setTimeout(() => {
+                    navigate("/");
+                }, 100);
             }
         } catch (error) {
             console.log(error.response);

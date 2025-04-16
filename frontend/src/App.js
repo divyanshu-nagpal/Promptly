@@ -13,6 +13,8 @@ import SettingsPage from './pages/SettingsPage';
 import ReportsPage from './pages/ReportsPage';
 import AdminPanel from './pages/AdminPanel';
 import AboutUs from './pages/AboutUs';
+import AddEvent from './pages/AddEvent';
+import CheckEmail from './pages/CheckEmail';
 
 const App = () => {
     return (
@@ -32,6 +34,9 @@ const App = () => {
                     <Route path="/reports" element={<ReportsPage />} />
                     <Route path="/admin-panel" element={<AdminPanel />} />
                     <Route path="/about" element={<AboutUs />} />
+                    <Route path="/add-event" element={<AddEvent />} />
+                    <Route path="/check-email" element={<CheckEmail />} />
+
 
                 </Routes>
             </main>
