@@ -7,6 +7,7 @@ const {
     downvotePrompt ,
     bookmarkPrompt,
     getPromptById,
+    searchPrompts,
 } = require('../controllers/promptController');
 const auth = require('../middleware/auth');
 const roleAuth = require('../middleware/roleAuth');
@@ -19,7 +20,9 @@ router.post('/:id/like',auth, likePrompt); // Like a prompt
 router.post('/:id/upvote',auth, upvotePrompt); // Upvote a prompt
 router.post('/:id/downvote',auth, downvotePrompt); // Downvote a prompt
 router.post('/:id/bookmark', auth, bookmarkPrompt);
+router.get('/search',auth, searchPrompts);
 router.get('/:id', getPromptById);
+
 
 
 

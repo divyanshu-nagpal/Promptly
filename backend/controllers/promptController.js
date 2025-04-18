@@ -1,6 +1,7 @@
 const Prompt = require('../models/Prompt');
 const User = require('../models/User');
 const cloudinary = require('../config/cloudinary');
+const Fuse = require('fuse.js');
 require('dotenv').config();
 
 // Get all prompts
@@ -194,8 +195,53 @@ const getPromptById = async (req, res) => {
   }
 };
 
+// Search prompts with filters
+const stopWords = new Set([
+  'is', 'in', 'are', 'the', 'of', 'on', 'to', 'and', 'a', 'an', 'at', 'by', 'for', 'with', 'was', 'were', 'be', 'has', 'had', 'do', 'does', 'did', 'from', 'as', 'but'
+]);
 
-module.exports = { getAllPrompts, createPrompt, likePrompt, upvotePrompt, downvotePrompt, bookmarkPrompt, getPromptById };
+const searchPrompts = async (req, res) => {
+  const query = req.query.q;
+  if (!query) return res.status(400).json({ message: 'Query is required' });
+
+  try {
+    const prompts = await Prompt.find().populate('user', 'username totalPrompts profilePicture');;
+
+    // Clean the output text (remove image URL part)
+    const processedPrompts = prompts.map(p => ({
+      ...p._doc,
+      cleanOutput: p.output.split('$#iMgUrL#$')[0] || ''
+    }));
+
+    // Clean the user query by removing stop words
+    const cleanQuery = query
+      .toLowerCase()
+      .split(/\s+/) // Split into words
+      .filter(word => !stopWords.has(word)) // Remove stop words
+      .join(' '); // Join back into a cleaned query
+
+    // Setup Fuse
+    const fuse = new Fuse(processedPrompts, {
+      keys: ['title', 'input', 'cleanOutput'],
+      includeScore: true,
+      threshold: 0.4, // adjust for fuzziness (lower = stricter)
+      minMatchCharLength: 3
+    });
+
+    // Perform search with the cleaned query
+    const results = fuse.search(cleanQuery);
+
+    // Extract just the matched prompts (sorted by relevance)
+    const matchedPrompts = results.map(result => result.item);
+
+    res.json(matchedPrompts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = { getAllPrompts, createPrompt, likePrompt, upvotePrompt, downvotePrompt, bookmarkPrompt, getPromptById ,searchPrompts};
 
 
 
