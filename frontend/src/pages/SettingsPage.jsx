@@ -104,15 +104,7 @@ const SettingsPage = () => {
 
   const handleAdminPanel = () => navigate('/admin-panel');
 
-  // Simple loading spinner
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-t-blue-500 border-r-purple-500 border-b-blue-500 border-l-purple-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-  
+  if (loading) return <LoadingState />;
   if (error) return <ErrorState message={error} retryFn={() => window.location.reload()} />;
 
   return (
@@ -286,6 +278,63 @@ const SettingsPage = () => {
     </div>
   );
 };
+
+// Loading State Component - Redesigned without circle loading
+const LoadingState = () => (
+  <div className="min-h-screen bg-gray-950 relative">
+    <div className="absolute inset-0 bg-gray-950">
+      <div className="absolute top-0 left-0 w-full h-full opacity-30 bg-[radial-gradient(circle_at_30%_20%,#2563eb,transparent_40%)]"></div>
+      <div className="absolute bottom-0 right-0 w-full h-full opacity-20 bg-[radial-gradient(circle_at_70%_80%,#8b5cf6,transparent_40%)]"></div>
+    </div>
+
+    <div className="flex flex-col items-center justify-center h-screen relative z-10">
+      <div className="max-w-md w-full">
+        {/* Title skeleton */}
+        <div className="animate-pulse mb-6 flex flex-col items-center">
+          <div className="h-6 w-32 bg-gray-800 rounded-full mb-4"></div>
+          <div className="h-10 w-64 bg-gray-800 rounded-lg mb-3"></div>
+          <div className="h-4 w-48 bg-gray-800 rounded-full"></div>
+        </div>
+        
+        {/* Card skeleton */}
+        <div className="relative group mb-6">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur opacity-10 transition duration-1000"></div>
+          <div className="relative bg-gray-900 rounded-xl p-6 border border-gray-800">
+            <div className="animate-pulse flex flex-col space-y-4">
+              <div className="h-6 w-36 bg-gray-800 rounded mb-2"></div>
+              <div className="h-4 w-full bg-gray-800 rounded"></div>
+              <div className="h-12 w-full bg-gray-800 rounded-lg"></div>
+              <div className="h-12 w-full bg-gray-800 rounded-lg"></div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Second card skeleton */}
+        <div className="relative group">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur opacity-10 transition duration-1000"></div>
+          <div className="relative bg-gray-900 rounded-xl p-6 border border-gray-800">
+            <div className="animate-pulse flex flex-col space-y-4">
+              <div className="h-6 w-48 bg-gray-800 rounded mb-2"></div>
+              <div className="h-4 w-full bg-gray-800 rounded"></div>
+              <div className="h-4 w-2/3 bg-gray-800 rounded"></div>
+              <div className="flex items-center space-x-4">
+                <div className="h-12 w-12 bg-gray-800 rounded-full"></div>
+                <div className="flex-1">
+                  <div className="h-4 w-24 bg-gray-800 rounded mb-2"></div>
+                  <div className="h-3 w-32 bg-gray-800 rounded"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="text-center mt-6">
+          <p className="text-gray-400 animate-pulse">Loading your settings...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 // Error State Component
 const ErrorState = ({ message, retryFn }) => (

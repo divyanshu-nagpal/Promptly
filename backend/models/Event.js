@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+
 
 const eventSchema = new mongoose.Schema(
   {
@@ -18,9 +19,11 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    registrationLink: {
+      type: String,
+      required: true,
+    }
   },
   { timestamps: true }
 );
-
-const Event = mongoose.model("Event", eventSchema);
-module.exports = Event;
+module.exports = mongoose.model('Event', eventSchema);

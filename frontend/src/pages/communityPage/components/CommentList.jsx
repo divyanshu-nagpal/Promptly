@@ -24,7 +24,7 @@ const TimeAgo = ({ timestamp }) => {
 };
 
 // Updated ReportModal to match PromptCard's style
-const ReportModal = ({ targetId, targetType, onClose, onSuccess }) => {
+const ReportModal = ({ targetId, targetType, onClose, onSuccess, onError }) => {
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -58,7 +58,7 @@ const ReportModal = ({ targetId, targetType, onClose, onSuccess }) => {
       onClose();
     } catch (err) {
       console.error(err);
-      alert(`Failed to report ${targetType}`);
+      onError(`Failed to report ${targetType}`);
     } finally {
       setLoading(false);
     }
@@ -140,7 +140,7 @@ const CommentList = ({ promptId }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reportTarget, setReportTarget] = useState(null);
-  const [reportSuccess, setReportSuccess] = useState(false);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     fetchComments();
@@ -152,14 +152,23 @@ const CommentList = ({ promptId }) => {
       setComments(response.data);
     } catch (err) {
       console.error('Error fetching comments:', err);
+      showNotification('Failed to load comments. Please try again later.', 'error');
     } finally {
       setLoading(false);
     }
   };
 
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
+  };
+
   const handleReportSuccess = () => {
-    setReportSuccess(true);
-    setTimeout(() => setReportSuccess(false), 3000);
+    showNotification('Report submitted successfully');
+  };
+
+  const handleReportError = (errorMessage) => {
+    showNotification(errorMessage, 'error');
   };
 
   if (loading) {
@@ -219,13 +228,18 @@ const CommentList = ({ promptId }) => {
           targetType="comment"
           onClose={() => setReportTarget(null)}
           onSuccess={handleReportSuccess}
+          onError={handleReportError}
         />
       )}
 
-      {reportSuccess && (
-        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-5 py-3 rounded-lg shadow-xl z-50 border border-green-500/50 animate-fade-in flex items-center gap-2">
-          <div className="h-2 w-2 bg-green-300 rounded-full"></div>
-          Report submitted successfully
+      {notification && (
+        <div className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 ${
+          notification.type === 'error' 
+            ? 'bg-gradient-to-r from-red-600 to-red-500 border-red-500/50' 
+            : 'bg-gradient-to-r from-green-600 to-emerald-600 border-green-500/50'
+          } text-white px-5 py-3 rounded-lg shadow-xl z-50 border animate-fade-in flex items-center gap-2`}>
+          <div className={`h-2 w-2 ${notification.type === 'error' ? 'bg-red-300' : 'bg-green-300'} rounded-full`}></div>
+          {notification.message}
         </div>
       )}
     </div>

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Users, AlertCircle, Shield, Trash2, RefreshCw } from "lucide-react";
+import { Users, AlertCircle, Shield, Trash2, RefreshCw, X } from "lucide-react";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -49,17 +51,78 @@ const AdminPanel = () => {
     }
   };
 
-  const deleteUser = async (userId) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
+  const handleDeleteClick = (user) => {
+    setUserToDelete(user);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!userToDelete) return;
     
     try {
-      await axios.delete(`/api/admin/delete-user/${userId}`, {
+      await axios.delete(`/api/admin/delete-user/${userToDelete._id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      setUsers(users.filter(user => user._id !== userId));
+      setUsers(users.filter(user => user._id !== userToDelete._id));
+      setShowConfirmModal(false);
+      setUserToDelete(null);
     } catch (err) {
       setError('Failed to delete user');
     }
+  };
+
+  const cancelDelete = () => {
+    setShowConfirmModal(false);
+    setUserToDelete(null);
+  };
+
+  // Confirmation Modal Component
+  const ConfirmModal = () => {
+    if (!showConfirmModal) return null;
+    
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        {/* Backdrop */}
+        <div className="fixed inset-0 bg-gray-950 bg-opacity-75" onClick={cancelDelete}></div>
+        
+        {/* Modal */}
+        <div className="bg-gray-900 border border-gray-800 rounded-lg shadow-xl z-10 w-full max-w-md p-6">
+          <div className="flex justify-between items-start">
+            <div className="flex items-center">
+              <div className="bg-red-900/40 p-2 rounded-full mr-3">
+                <AlertCircle className="h-6 w-6 text-red-500" />
+              </div>
+              <h3 className="text-xl font-medium text-white">Delete User</h3>
+            </div>
+            <button onClick={cancelDelete} className="text-gray-400 hover:text-white">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          
+          <div className="mt-4">
+            <p className="text-gray-300">
+              Are you sure you want to delete the user <span className="font-semibold text-white">{userToDelete?.username}</span>?
+            </p>
+            <p className="text-gray-400 text-sm mt-1">This action cannot be undone.</p>
+          </div>
+          
+          <div className="mt-6 flex justify-end space-x-3">
+            <button
+              onClick={cancelDelete}
+              className="px-4 py-2 bg-gray-800 text-gray-300 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={confirmDelete}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -87,8 +150,6 @@ const AdminPanel = () => {
             <h1 className="text-3xl font-bold text-white">User Management</h1>
             <p className="text-gray-400 mt-2">Manage user accounts and permissions</p>
           </div>
-          
-          
         </div>
 
         {/* Error Message */}
@@ -162,7 +223,7 @@ const AdminPanel = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-right">
                             <button
-                              onClick={() => deleteUser(user._id)}
+                              onClick={() => handleDeleteClick(user)}
                               className="inline-flex items-center px-3 py-1 border border-transparent rounded-md text-sm font-medium text-white bg-red-900 hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition-colors"
                             >
                               <Trash2 className="h-4 w-4 mr-1" />
@@ -234,6 +295,9 @@ const AdminPanel = () => {
           </div>
         </div>
       </div>
+      
+      {/* Render the confirmation modal */}
+      <ConfirmModal />
       
       {/* Custom animation styles */}
       <style jsx global>{`

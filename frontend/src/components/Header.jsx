@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, NavLink, useLocation } from 'react-router-dom';
 import { 
   Menu, 
   X, 
@@ -12,15 +12,18 @@ import {
   BarChart3,
   Calendar,
   Mail,
-  ChevronRight
+  ChevronRight,
+  PlusCircle
 } from 'lucide-react';
 import { useUserData } from '../Hooks/useUserData';
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { user: userData, isAuthenticated, logout } = useUserData();
+  const isOnCommunityPage = location.pathname === '/community' || location.pathname.startsWith('/community/');
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -55,6 +58,17 @@ const Header = () => {
   const handleLogout = () => {
     setIsUserMenuOpen(false);
     logout();
+  };
+
+  const handleAddPost = () => {
+    navigate('/add-prompt');
+  };
+  
+  const handleNavClick = (e, item) => {
+    if (item === 'Community' && !isAuthenticated) {
+      e.preventDefault(); // Prevent default navigation
+      navigate('/login'); // Redirect to login
+    }
   };
 
   const navItems = ['Home', 'Community', 'About'];
@@ -141,15 +155,20 @@ const Header = () => {
 
               {/* Desktop Navigation */}
               <nav className="hidden md:flex items-center space-x-8">
-                {navItems.map((item, index) => (
-                  <Link
+                {navItems.map((item) => (
+                  <NavLink
                     key={item}
                     to={`/${item.toLowerCase()}`}
-                    className="text-gray-300 hover:text-blue-400 transition-all duration-200 text-sm font-medium relative group"
+                    onClick={(e) => handleNavClick(e, item)}
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-blue-400 transition-all duration-200 text-sm font-medium relative group"
+                        : "text-gray-300 hover:text-blue-400 transition-all duration-200 text-sm font-medium relative group"
+                    }
                   >
                     {item}
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-200 group-hover:w-full" />
-                  </Link>
+                  </NavLink>
                 ))}
               </nav>
 
@@ -198,8 +217,17 @@ const Header = () => {
                 )}
               </div>
 
-              {/* Mobile menu button */}
-              <div className="md:hidden">
+              {/* Mobile menu buttons */}
+              <div className="md:hidden flex items-center space-x-2">
+                {isAuthenticated && isOnCommunityPage && (
+                  <button
+                    onClick={handleAddPost}
+                    className="p-2 text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                    aria-label="Add Post"
+                  >
+                    <PlusCircle size={24} />
+                  </button>
+                )}
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="p-2 rounded-md text-gray-300 hover:text-blue-400 hover:bg-gray-800/50"
@@ -219,7 +247,10 @@ const Header = () => {
                     key={item}
                     to={`/${item.toLowerCase()}`}
                     className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-md"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={(e) => {
+                      handleNavClick(e, item);
+                      setIsMobileMenuOpen(false); // Additional action for mobile only - close menu
+                    }}
                   >
                     {item}
                   </Link>

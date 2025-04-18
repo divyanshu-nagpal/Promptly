@@ -15,10 +15,13 @@ import AdminPanel from './pages/AdminPanel';
 import AboutUs from './pages/AboutUs';
 import AddEvent from './pages/AddEvent';
 import CheckEmail from './pages/CheckEmail';
+import ScrollToTop from './components/ScrollToTop'; 
+import NotFoundPage from './pages/NotFoundPage';
 
 const App = () => {
     return (
         <Router>
+            <ScrollToTop /> 
             <Header />
             <main>
                 <Routes>
@@ -36,6 +39,7 @@ const App = () => {
                     <Route path="/about" element={<AboutUs />} />
                     <Route path="/add-event" element={<AddEvent />} />
                     <Route path="/check-email" element={<CheckEmail />} />
+                    <Route path="*" element={<NotFoundPage />} />
 
 
                 </Routes>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, Share2, Star, ArrowRight, ChevronRight, Zap, Award, Users } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 
 function LandingPageContent() {
   const [query, setQuery] = useState('');
@@ -11,6 +12,7 @@ function LandingPageContent() {
   const [visibleTiles, setVisibleTiles] = useState({});
 
   const categories = ['ChatGPT', 'DALL-E', 'Midjourney', 'Stable Diffusion'];
+  const navigate = useNavigate();
 
   // Cycle through categories automatically
   useEffect(() => {
@@ -403,20 +405,16 @@ function LandingPageContent() {
         </div>
       </section>
 
-      {/* CTA Section with animated buttons */}
-      <section id="cta" className="animate-on-scroll py-16 relative overflow-hidden mt-24 mb-20">
-        {/* Simple solid background instead of animated gradient */}
-        <div className="absolute inset-0 bg-blue-900"></div>
+      {/* CTA Section */}
+      <section id="cta" className="animate-on-scroll py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-purple-900 opacity-20"></div>
         
         <div className={`max-w-4xl mx-auto px-4 text-center relative ${animatedSections.cta ? 'animate-fade-in' : 'opacity-0'}`}>
-          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/20 text-white text-sm mb-4">
-            <span>Join Today</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ready to Find Your Perfect Prompt?
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            Ready to Join the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Promptly</span> Community?
           </h2>
-          <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join our community today and start discovering the best prompts for your AI projects.
+          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Become part of our growing network of prompt creators and AI enthusiasts to share your knowledge and discover new possibilities.
           </p>
           <div 
             className="inline-block animate-tile"
@@ -427,12 +425,14 @@ function LandingPageContent() {
               transition: 'opacity 0.5s ease, transform 0.5s ease',
             }}
           >
-            <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center hover:bg-gray-100">
-              Get Started — It's Free
-              <ArrowRight className="ml-2 h-5 w-5" />
+            <button
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 flex items-center"
+            onClick={() => navigate('/register')}
+            >
+            Get Started Today
+            <ArrowRight className="ml-2 h-5 w-5" />
             </button>
           </div>
-          <div className="mt-4 text-blue-100 text-sm">No credit card required • Cancel anytime</div>
         </div>
       </section>
 

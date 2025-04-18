@@ -2,9 +2,9 @@ const Event = require("../models/Event");
 
 exports.addEvent = async (req, res) => {
   try {
-    const { title, eventDate, eventTime, organizer } = req.body;
+    const { title, eventDate, eventTime, organizer, registrationLink } = req.body;
 
-    if (!title || !eventDate || !eventTime || !organizer) {
+    if (!title || !eventDate || !eventTime || !organizer || !registrationLink) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -13,6 +13,7 @@ exports.addEvent = async (req, res) => {
       eventDate,
       eventTime,
       organizer,
+      registrationLink,
     });
 
     await newEvent.save();
