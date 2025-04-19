@@ -4,7 +4,7 @@ import CommentList from './CommentList';
 import CommentInput from './CommentInput';
 import { handleBookmark, handleLike } from '../../../utils/utils';
 import getPromptRank from '../../../utils/options';
-import api from "../lib/api";
+import api from '../../../lib/api';
 
 const TimeAgo = ({ timestamp }) => {
   const getTimeAgo = (date) => {

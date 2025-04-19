@@ -1,7 +1,7 @@
 // CommentList.jsx
 import React, { useState, useEffect } from 'react';
 import { Heart, Reply, Flag, MoreHorizontal, X, AlertTriangle } from 'lucide-react';
-import api from "../lib/api";
+import api from '../../../lib/api';
 import CommentInput from './CommentInput';
 
 const TimeAgo = ({ timestamp }) => {

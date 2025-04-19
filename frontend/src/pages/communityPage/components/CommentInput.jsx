@@ -1,7 +1,7 @@
 // CommentInput.jsx
 import React, { useState } from 'react';
 import { Send } from 'lucide-react';
-import api from "../lib/api";
+import api from '../../../lib/api';
 
 const CommentInput = ({ promptId, onCommentAdded }) => {
   const [commentText, setCommentText] = useState('');

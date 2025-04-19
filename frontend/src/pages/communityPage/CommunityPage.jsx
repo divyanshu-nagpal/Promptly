@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, Plus, Users, Bookmark, Calendar, Filter, Menu } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import api from "../lib/api";
+import api from '../../lib/api';
 import PromptCard from './components/PromptCard';
 import { fetchBookmarkedPrompts, fetchPrompts, fetchTopUsers } from '../../utils/utils';
 

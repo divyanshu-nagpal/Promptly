@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from "../lib/api";
+import api from '../../lib/api';
 import UserPrompts from './components/UserPrompts';
 import { User, FileText, Plus } from 'lucide-react';
 
