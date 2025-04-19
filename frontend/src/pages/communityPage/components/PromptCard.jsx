@@ -141,8 +141,10 @@ const ReportModal = ({ targetId, targetType, onClose, onSuccess, onError }) => {
 const PromptCard = ({ prompt, setPrompts, setBookmarkedPrompts, darkMode = true }) => {
   const [isICopied, setIsICopied] = useState(false);
   const [isOCopied, setIsOCopied] = useState(false);
-  const OUTPUT_SPLIT = '$#iMgUrL#$';
-  const [outputText, outputImage] = prompt.output.split(OUTPUT_SPLIT).map((item) => item?.trim());
+  const OUTPUT_SPLIT = process.env.OUTPUT_SPLIT;
+  const [outputText, outputImage] = prompt.output 
+  ? prompt.output.split(OUTPUT_SPLIT).map((item) => item?.trim()) 
+  : ['', ''];
   const displayName = prompt.user?.username || 'Anonymous';
   const rank = prompt?.user?.totalPrompts ? getPromptRank(prompt.user.totalPrompts) : " ";
 
@@ -400,7 +402,7 @@ ${outputText || ''}
       <div className="p-5 border-t border-gray-800 bg-gray-900/80 backdrop-blur-sm">
         <div className="flex flex-wrap justify-between items-center gap-4">
           <div className="flex flex-wrap gap-2">
-            {prompt.tags.map((tag) => (
+          {(prompt.tags || []).map((tag) => (
               <span
                 key={tag}
                 className="inline-flex items-center gap-1 px-3 py-1 bg-gray-800/80 text-gray-300 rounded-full text-sm border border-gray-700/50 hover:bg-gray-700/50 transition-colors cursor-pointer shadow-sm"

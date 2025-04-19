@@ -493,10 +493,10 @@ const ReportsPage = () => {
                                   Output
                                 </h3>
                                 {group.content.output &&
-                                group.content.output.includes("$#iMgUrL#$") ? (
+                                group.content.output.includes(process.env.OUTPUT_SPLIT) ? (
                                   (() => {
                                     const [textPart, imageUrl] =
-                                      group.content.output.split("$#iMgUrL#$");
+                                      group.content.output.split(process.env.OUTPUT_SPLIT);
                                     return (
                                       <>
                                         <p className="text-white">

@@ -210,7 +210,7 @@ const searchPrompts = async (req, res) => {
     // Clean the output text (remove image URL part)
     const processedPrompts = prompts.map(p => ({
       ...p._doc,
-      cleanOutput: p.output.split('$#iMgUrL#$')[0] || ''
+      cleanOutput: p.output.split(process.env.OUTPUT_SPLIT)[0] || ''
     }));
 
     // Clean the user query by removing stop words

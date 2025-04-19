@@ -435,14 +435,6 @@ useEffect(() => {
                     />
                   </div>
                 </div>
-                {!isMobile && (
-                  <button
-                    onClick={() => setView(view === 'grid' ? 'list' : 'grid')}
-                    className="p-3 rounded-lg border border-gray-700 bg-gray-800/50 hover:bg-gray-700/50 transition-colors text-gray-300 hover:scale-105 transition-transform duration-200"
-                  >
-                    <Filter className="w-5 h-5" />
-                  </button>
-                )}
               </div>
             </div>
           </div>
