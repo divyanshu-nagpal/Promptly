@@ -57,20 +57,15 @@ function CommunityPage() {
       // The search will be performed automatically by the existing useEffect that watches 'search'
     }
   }, []);
-  
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        console.log('Requesting events from: /api/events/upcoming');
-        const res = await fetch('/api/events/upcoming');
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-        const data = await res.json();
-        console.log('Events data received:', data);
+        const res = await api.get('/api/events/upcoming');
+        console.log('Events data received:', res.data);
         
         // Process the events data to ensure consistent formatting
-        const processedEvents = data.map(event => ({
+        const processedEvents = res.data.map(event => ({
           _id: event._id,
           title: event.title || 'Untitled Event',
           date: event.eventDate ? new Date(event.eventDate) : new Date(),
@@ -85,7 +80,7 @@ function CommunityPage() {
         setUpcomingEvents([]);
       }
     };
-
+  
     fetchEvents();
   }, []);
 
