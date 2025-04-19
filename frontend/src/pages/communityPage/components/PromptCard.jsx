@@ -141,9 +141,8 @@ const ReportModal = ({ targetId, targetType, onClose, onSuccess, onError }) => {
 const PromptCard = ({ prompt, setPrompts, setBookmarkedPrompts, darkMode = true }) => {
   const [isICopied, setIsICopied] = useState(false);
   const [isOCopied, setIsOCopied] = useState(false);
-  // const OUTPUT_SPLIT = process.env.OUTPUT_SPLIT;
   const [outputText, outputImage] = prompt.output 
-  ? prompt.output.split(process.env.OUTPUT_SPLIT).map((item) => item?.trim()) 
+  ? prompt.output.split(process.env.REACT_APP_OUTPUT_SPLIT).map((item) => item?.trim()) 
   : ['', ''];
   const displayName = prompt.user?.username || 'Anonymous';
   const rank = prompt?.user?.totalPrompts ? getPromptRank(prompt.user.totalPrompts) : " ";
