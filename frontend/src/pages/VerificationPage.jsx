@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from "../lib/api";
 import { useNavigate, useParams } from 'react-router-dom';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
@@ -19,7 +19,7 @@ const VerifyPage = () => {
 
             try {
                 // Call the backend to verify the token
-                const response = await axios.get(`/api/auth/verify-email/${verificationtoken}`);
+                const response = await api.get(`/api/auth/verify-email/${verificationtoken}`);
                 setStatus('Email verified successfully!');
                 setIsSuccess(true);
                 

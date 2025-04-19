@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../lib/api";
 import { Users, AlertCircle, Shield, Trash2, RefreshCw, X } from "lucide-react";
 
 const AdminPanel = () => {
@@ -17,7 +17,7 @@ const AdminPanel = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/admin/users', {
+      const response = await api.get('/api/admin/users', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setUsers(response.data);
@@ -38,7 +38,7 @@ const AdminPanel = () => {
 
   const updateRole = async (userId, role) => {
     try {
-      await axios.post(
+      await api.post(
         '/api/admin/assign-role',
         { userId, role },
         {
@@ -60,7 +60,7 @@ const AdminPanel = () => {
     if (!userToDelete) return;
     
     try {
-      await axios.delete(`/api/admin/delete-user/${userToDelete._id}`, {
+      await api.delete(`/api/admin/delete-user/${userToDelete._id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setUsers(users.filter(user => user._id !== userToDelete._id));

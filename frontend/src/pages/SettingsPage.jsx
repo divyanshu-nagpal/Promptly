@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from "../lib/api";
 import { useNavigate } from 'react-router-dom';
 import { Shield, ShieldOff, LayoutDashboard, Mail, ChevronRight, FileText, Settings } from 'lucide-react';
 
@@ -16,7 +16,7 @@ const SettingsPage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('/api/user/profile', {
+        const response = await api.get('/api/user/profile', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         setUserData(response.data);
@@ -75,7 +75,7 @@ const SettingsPage = () => {
     setIsLoading2FA(true);
     setError(null);
     try {
-      await axios.post('/api/auth/enable-2fa', { userId: userData.user._id }, {
+      await api.post('/api/auth/enable-2fa', { userId: userData.user._id }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setIs2FAEnabled(true);
@@ -91,7 +91,7 @@ const SettingsPage = () => {
     setIsLoading2FA(true);
     setError(null);
     try {
-      await axios.post('/api/auth/disable-2fa', { userId: userData.user._id }, {
+      await api.post('/api/auth/disable-2fa', { userId: userData.user._id }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setIs2FAEnabled(false);

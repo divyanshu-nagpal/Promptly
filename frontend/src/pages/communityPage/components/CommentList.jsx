@@ -1,7 +1,7 @@
 // CommentList.jsx
 import React, { useState, useEffect } from 'react';
 import { Heart, Reply, Flag, MoreHorizontal, X, AlertTriangle } from 'lucide-react';
-import axios from 'axios';
+import api from "../lib/api";
 import CommentInput from './CommentInput';
 
 const TimeAgo = ({ timestamp }) => {
@@ -41,7 +41,7 @@ const ReportModal = ({ targetId, targetType, onClose, onSuccess, onError }) => {
     if (!reason.trim()) return;
     setLoading(true);
     try {
-      await axios.post(
+      await api.post(
         '/api/reports/submit',
         {
           targetId,
@@ -148,7 +148,7 @@ const CommentList = ({ promptId }) => {
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get(`/api/comments/${promptId}`);
+      const response = await api.get(`/api/comments/${promptId}`);
       setComments(response.data);
     } catch (err) {
       console.error('Error fetching comments:', err);

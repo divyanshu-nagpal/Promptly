@@ -10,7 +10,7 @@ function LandingPageContent() {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [animatedSections, setAnimatedSections] = useState({});
   const [visibleTiles, setVisibleTiles] = useState({});
-
+  const token = localStorage.getItem("token");
   const categories = ['ChatGPT', 'DALL-E', 'Midjourney', 'Stable Diffusion'];
   const navigate = useNavigate();
 
@@ -90,39 +90,20 @@ function LandingPageContent() {
     };
   }, []);
 
-  const handleSearch = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      // Simulating API call with setTimeout
-      setTimeout(() => {
-        // Mock data for demonstration
-        setResults([
-          {
-            _id: '1',
-            title: 'Portrait Photography Prompt',
-            prompt: 'Create a professional portrait with dramatic lighting, shallow depth of field, and natural expression.',
-            tags: ['Photography', 'Portrait', 'Midjourney'],
-            likes: 432,
-            downloads: 1289
-          },
-          {
-            _id: '2',
-            title: 'Code Explanation Assistant',
-            prompt: 'Explain this code in simple terms, highlighting important patterns and potential issues.',
-            tags: ['Programming', 'Education', 'ChatGPT'],
-            likes: 315,
-            downloads: 976
-          }
-        ]);
-        setLoading(false);
-      }, 800);
-    } catch (err) {
-      console.error(err);
-      setError('Something went wrong. Please try again.');
-      setLoading(false);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      // Redirect to community page with search query parameter
+      if (token) {
+        navigate(`/community?search=${encodeURIComponent(query.trim())}`);
+      }
+      else{
+        navigate("/login");
+        return;
+      }
     }
   };
+
 
   const isTileVisible = (id) => {
     return visibleTiles[id] === true;
@@ -165,29 +146,25 @@ function LandingPageContent() {
               </p>
               <br/>
               
-              {/* Search Bar with animated focus */}
-              <div className="mb-6 relative group">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                <div className="relative flex items-center bg-gray-900 rounded-lg p-1">
-                  <Search className="h-5 w-5 text-gray-500 ml-3" />
-                  <input
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search for prompts..."
-                    className="w-full px-4 py-4 bg-transparent text-white focus:outline-none"
-                  />
-                  <button
-                    onClick={handleSearch}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105"
-                  >
-                    Search
-                  </button>
-                </div>
-                {/* {loading && <p className="text-sm text-gray-500 mt-2">Searching...</p>} */}
-                {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
-              </div>
-            </div>
+              <form onSubmit={handleSearch} className="mb-6 relative">
+  <div className="relative flex items-center bg-gray-950 rounded-md border-0 overflow-hidden shadow-xl">
+    <input
+      type="text"
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      placeholder="Search for prompts..."
+      className="w-full px-5 py-4 bg-transparent text-white focus:outline-none placeholder:text-gray-500 caret-indigo-400"
+    />
+    <button
+      type="submit"
+      className="absolute right-2 p-2 bg-indigo-600 rounded-md text-white flex items-center justify-center transition-all duration-200 hover:bg-indigo-700"
+    >
+      <Search className="h-5 w-5" />
+    </button>
+  </div>
+  {error && <p className="text-sm text-red-400 mt-2">{error}</p>}
+</form>
+</div>
             
             {/* Animated illustration */}
             <div className="md:w-2/5 relative">

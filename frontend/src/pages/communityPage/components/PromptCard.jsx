@@ -4,7 +4,7 @@ import CommentList from './CommentList';
 import CommentInput from './CommentInput';
 import { handleBookmark, handleLike } from '../../../utils/utils';
 import getPromptRank from '../../../utils/options';
-import axios from 'axios';
+import api from "../lib/api";
 
 const TimeAgo = ({ timestamp }) => {
   const getTimeAgo = (date) => {
@@ -43,7 +43,7 @@ const ReportModal = ({ targetId, targetType, onClose, onSuccess, onError }) => {
     if (!reason.trim()) return;
     setLoading(true);
     try {
-      await axios.post(
+      await api.post(
         '/api/reports/submit',
         {
           targetId,

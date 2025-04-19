@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../lib/api";
 import {
   Check,
   Flag,
@@ -97,7 +97,7 @@ const ReportsPage = () => {
   const fetchReports = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/reports/all", {
+      const response = await api.get("/api/reports/all", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
@@ -125,7 +125,7 @@ const ReportsPage = () => {
           };
 
           try {
-            const res = await axios.get(
+            const res = await api.get(
               `/api/${
                 targetType === "prompt" ? "prompts" : "comments/single"
               }/${targetId}`
@@ -173,7 +173,7 @@ const ReportsPage = () => {
 
   const handleApprove = async (targetId) => {
     try {
-      await axios.post(
+      await api.post(
         "/api/reports/approve",
         { targetId },
         {
@@ -208,7 +208,7 @@ const ReportsPage = () => {
   const handleDelete = async (targetId, targetType, _id) => {
     try {
       setDeleteLoading(targetId);
-      await axios.delete("/api/reports/delete", {
+      await api.delete("/api/reports/delete", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         data: { targetId, targetType, _id },
       });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, NavLink, useLocation } from 'react-router-dom';
 import { 
   Menu, 
@@ -24,6 +24,11 @@ const Header = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { user: userData, isAuthenticated, logout } = useUserData();
   const isOnCommunityPage = location.pathname === '/community' || location.pathname.startsWith('/community/');
+  
+  // Use ref to track component mount state
+  const isInitialMount = useRef(true);
+  // Use ref to track if login was handled
+  const loginHandled = useRef(false);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -34,6 +39,41 @@ const Header = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isUserMenuOpen]);
+  
+  // Effect specifically for user login - works on first login in new browser
+  useEffect(() => {
+    // Skip the first render
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      
+      // If user is already logged in on initial render (e.g. from stored token), 
+      // record that login has been handled
+      if (isAuthenticated) {
+        loginHandled.current = true;
+      }
+      return;
+    }
+    
+    // Check if user is authenticated and login hasn't been handled
+    if (isAuthenticated && !loginHandled.current) {
+      console.log('User logged in - executing login actions');
+      
+      // Execute first-time login actions here
+      // For example:
+      // - Show welcome notification
+      // - Fetch user data
+      // - Set up preferences
+      // - Record analytics event
+      
+      // Mark login as handled
+      loginHandled.current = true;
+    }
+    
+    // Reset login handled flag when user logs out
+    if (!isAuthenticated) {
+      loginHandled.current = false;
+    }
+  }, [isAuthenticated]);
 
   const handleProfileClick = () => {
     setIsUserMenuOpen(false);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../lib/api";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Key, AlertCircle } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -22,7 +22,7 @@ const LoginPage = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post("/api/auth/login", { 
+            const response = await api.post("/api/auth/login", { 
                 email, 
                 password, 
                 token: showTwoFactor ? twoFactorCode : undefined 

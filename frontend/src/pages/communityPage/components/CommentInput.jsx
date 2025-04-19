@@ -1,7 +1,7 @@
 // CommentInput.jsx
 import React, { useState } from 'react';
 import { Send } from 'lucide-react';
-import axios from 'axios';
+import api from "../lib/api";
 
 const CommentInput = ({ promptId, onCommentAdded }) => {
   const [commentText, setCommentText] = useState('');
@@ -23,7 +23,7 @@ const CommentInput = ({ promptId, onCommentAdded }) => {
 
     setIsSubmitting(true);
     try {
-      const response = await axios.post('/api/comments', 
+      const response = await api.post('/api/comments', 
         { promptId, text: commentText },
         {
           headers: { 

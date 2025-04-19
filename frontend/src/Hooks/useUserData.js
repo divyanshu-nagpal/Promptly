@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../lib/api";
 
 export const useUserData = () => {
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ export const useUserData = () => {
           throw new Error("No token available");
         }
         
-        const response = await axios.get("/api/user/profile", {
+        const response = await api.get("/api/user/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
         

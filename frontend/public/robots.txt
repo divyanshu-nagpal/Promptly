@@ -1,3 +1,15 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /login
+Disallow: /register
+Disallow: /verify-email
+Disallow: /settings
+Disallow: /reports
+Disallow: /admin-panel
+Disallow: /add-prompt
+Disallow: /add-event
+Disallow: /check-email
+Disallow: /community
+Disallow: /profile
+
+
+Sitemap: https://promptly.sbs/sitemap.xml

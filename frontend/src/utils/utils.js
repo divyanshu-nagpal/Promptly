@@ -1,10 +1,10 @@
-import axios from 'axios';
+import api from "../lib/api";
 import getPromptRank from './options';
 
 export const fetchPrompts = async (setPrompts, setError) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('/api/prompts', {
+    const response = await api.get('/api/prompts', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -21,7 +21,7 @@ export const fetchBookmarkedPrompts = async (setBookmarkedPrompts, setError, sho
   if (!showBookmarked) return;
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('/api/user/bookmarks', {
+    const response = await api.get('/api/user/bookmarks', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -37,7 +37,7 @@ export const fetchBookmarkedPrompts = async (setBookmarkedPrompts, setError, sho
 export const handleLike = async (promptId, isLiked, setPrompts, setBookmarkedPrompts) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
+      const response = await api.post(
         `/api/prompts/${promptId}/like`,
         { isLiked }, // Only send the updated isLiked status
         { headers: { Authorization: `Bearer ${token}` } }
@@ -69,7 +69,7 @@ export const handleLike = async (promptId, isLiked, setPrompts, setBookmarkedPro
 export const handleBookmark = async (promptId, isBookmarked, setPrompts, setBookmarkedPrompts) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.post(
+    const response = await api.post(
       `/api/prompts/${promptId}/bookmark`,
       { isBookmarked: !isBookmarked },
       { headers: { Authorization: `Bearer ${token}` } }
@@ -110,7 +110,7 @@ export const fetchTopUsers = async (setTopUsers, setError) => {
       }
       
       // Make the API request with Authorization header
-      const response = await axios.get('/api/user/leaderboard', {
+      const response = await api.get('/api/user/leaderboard', {
         headers: {
           Authorization: `Bearer ${token}`,  // Include token in Authorization header
         },

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, Plus, Users, Bookmark, Calendar, Filter, Menu } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate, useLocation } from 'react-router-dom';
+import api from "../lib/api";
 import PromptCard from './components/PromptCard';
 import { fetchBookmarkedPrompts, fetchPrompts, fetchTopUsers } from '../../utils/utils';
+
 
 function CommunityPage() {
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ function CommunityPage() {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+  const token = localStorage.getItem("token");
+
 
   // Reference for the main container
   const pageRef = useRef(null);
@@ -42,6 +45,18 @@ function CommunityPage() {
   }, []);
 
   const isMobile = windowWidth < 768;
+  
+  useEffect(() => {
+    // Get search query from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('search');
+    
+    // If search query exists in URL, set it in state and perform search
+    if (searchQuery) {
+      setSearch(searchQuery);
+      // The search will be performed automatically by the existing useEffect that watches 'search'
+    }
+  }, []);
   
   useEffect(() => {
     const fetchEvents = async () => {
@@ -153,27 +168,46 @@ function CommunityPage() {
     fetchTopUsers(setTopUsers, setError);
   }, []);
 
-  // Elasticsearch search handler
-  const handleSearch = async (e) => {
-    const value = e.target.value;
-    setSearch(value);
 
-    if (value.trim() === '') {
+// Step 1: Create a separate function for performing the search
+const performSearch = async (searchTerm) => {
+  if (searchTerm.trim() === '') {
+    fetchPrompts(setPrompts, setError);
+    return;
+  }
+
+  try {
+    const response = await api.get('/api/auth/prompts/search', {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      params: { q: searchTerm }
+    });
+    console.log('Search results:', response.data);
+    setPrompts(response.data);
+  } catch (err) {
+    console.error('Search error:', err);
+    setError('Search failed. Please try again later.');
+  }
+};
+
+// Step 2: Update your event handler to call the search function
+const handleSearch = (e) => {
+  const value = e.target.value;
+  setSearch(value);
+};
+
+// Step 3: Use the useEffect to call the search function when search state changes
+useEffect(() => {
+  const timer = setTimeout(() => {
+    if (search.trim() === '') {
+      // Reset to all prompts if search is cleared
       fetchPrompts(setPrompts, setError);
-      return;
+    } else {
+      performSearch(search);
     }
+  }, 500); // 500ms debounce
 
-    try {
-      const response = await axios.get('/api/search', {
-        params: { query: value }
-      });
-      console.log(response.data);
-      setPrompts(response.data);
-    } catch (err) {
-      console.error(err);
-      setError('Search failed. Please try again later.');
-    }
-  };
+  return () => clearTimeout(timer);
+}, [search]);
 
   const filteredPrompts = (showBookmarked ? bookmarkedPrompts : prompts).filter(prompt =>
     (filterTag ? prompt?.tags?.includes(filterTag) : true)
@@ -212,7 +246,7 @@ function CommunityPage() {
     },
   ];
 
-  const popularTags = ['AI', 'Writing', 'Code', 'Business', 'Creative'];
+  const popularTags = ['AI', 'Writing', 'Business', 'Code', 'Creative', 'Productivity','Tools', 'Storytelling', 'Marketing', 'Design', 'Education', 'Inspiration'];
 
   const isVisible = (id) => visibleItems[id] === true;
 
@@ -393,6 +427,7 @@ function CommunityPage() {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                     <input
                       type="text"
+                      name="search"
                       value={search}
                       onChange={handleSearch}
                       placeholder="Search prompts..."

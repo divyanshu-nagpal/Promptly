@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from "../lib/api";
 import { useNavigate } from 'react-router-dom';
 import { Mail, User, Lock, AlertCircle, Image } from 'lucide-react';
 
@@ -25,7 +25,7 @@ const RegisterPage = () => {
         }
     
         try {
-            const response = await axios.post('/api/auth/register', formData, {
+            const response = await api.post('/api/auth/register', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

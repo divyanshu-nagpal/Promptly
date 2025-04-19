@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5001",
+  "proxy": "https://promptly-kmtl.onrender.com",
   "dependencies": {
     "@tanstack/react-query": "^5.74.3",
     "axios": "^1.7.9",

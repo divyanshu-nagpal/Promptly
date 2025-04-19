@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../lib/api";
 import { X, CheckCircle, Calendar, Clock, User, Plus, ChevronRight, Link } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -79,9 +79,8 @@ const EventPage = () => {
 
     try {
       // For testing purposes, simulate a successful API call
-      // In a real application, you'd use axios like this:
       
-      const response = await axios.post(
+      const response = await api.post(
         "/api/events/add",
         eventDetails,
         {
