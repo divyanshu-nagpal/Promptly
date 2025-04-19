@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from "../lib/api";
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
 const VerifyPage = () => {
@@ -82,12 +82,12 @@ const VerifyPage = () => {
                                 <div className="animate-fade-in flex flex-col items-center">
                                     <AlertCircle className="h-16 w-16 text-red-500 mb-4" />
                                     <p className="text-lg font-medium text-white">{status}</p>
-                                    <a 
-                                        href="/login" 
+                                    <Link 
+                                        to="/login" 
                                         className="mt-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105"
                                     >
                                         Go to login
-                                    </a>
+                                    </Link>
                                 </div>
                             )}
                         </div>

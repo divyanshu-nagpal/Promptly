@@ -1,5 +1,6 @@
 import React from 'react';
 import { Mail, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const CheckEmail = () => {
   return (
@@ -80,9 +81,9 @@ const CheckEmail = () => {
             
             {/* Return to login link */}
             <div className="mt-6 text-center">
-              <a href="/login" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
+              <Link to ="/login" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
                 Return to login page
-              </a>
+              </Link>
             </div>
           </div>
         </div>

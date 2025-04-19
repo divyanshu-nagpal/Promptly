@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, Share2, Star, ArrowRight, ChevronRight, Zap, Award, Users } from 'lucide-react';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function LandingPageContent() {
   const [query, setQuery] = useState('');
@@ -209,13 +209,13 @@ function LandingPageContent() {
               { 
                 icon: <Users className="h-6 w-6 text-blue-500" />,
                 label: 'Active Users', 
-                value: '10K+',
+                value: '100+',
                 description: 'creators and explorers'
               },
               { 
                 icon: <Zap className="h-6 w-6 text-purple-500" />,
                 label: 'Prompts Shared', 
-                value: '50K+',
+                value: '500+',
                 description: 'and growing daily'
               },
               { 
@@ -304,12 +304,7 @@ function LandingPageContent() {
                   </div>
                   <h3 className="text-xl font-semibold mb-3 text-white">{feature.title}</h3>
                   <p className="text-gray-400 mb-6">{feature.description}</p>
-                  <div className="mt-auto">
-                    <a href="#" className="flex items-center text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors">
-                      Learn more 
-                      <ChevronRight className="h-4 w-4 ml-1" />
-                    </a>
-                  </div>
+
                 </div>
               </div>
             ))}

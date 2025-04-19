@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import api from "../lib/api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Key, AlertCircle } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -84,9 +84,9 @@ const LoginPage = () => {
                 </h2>
                 <p className="mt-3 text-center text-gray-400">
                     Don't have an account?{" "}
-                    <a href="/register" className="font-medium text-blue-400 hover:text-blue-300 transition-colors">
+                    <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300 transition-colors">
                         Sign up
-                    </a>
+                    </Link>
                 </p>
             </div>
 

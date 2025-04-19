@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import api from "../lib/api";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mail, User, Lock, AlertCircle, Image } from 'lucide-react';
 
 const RegisterPage = () => {
@@ -72,9 +72,9 @@ const RegisterPage = () => {
                 </h2>
                 <p className="mt-2 text-center text-gray-400 text-sm">
                     Already have an account?{' '}
-                    <a href="/login" className="font-medium text-blue-400 hover:text-blue-300 transition-colors">
+                    <Link to="/login" className="font-medium text-blue-400 hover:text-blue-300 transition-colors">
                         Sign in
-                    </a>
+                    </Link>
                 </p>
             </div>
 
@@ -189,20 +189,6 @@ const RegisterPage = () => {
                                 </button>
                             </div>
                         </form>
-
-                        {/* Terms and Privacy - More compact */}
-                        <div className="mt-3">
-                            <p className="text-xxs text-center text-gray-500">
-                                By signing up, you agree to our{' '}
-                                <a href="#" className="text-blue-400 hover:text-blue-300">
-                                    Terms
-                                </a>{' '}
-                                &{' '}
-                                <a href="#" className="text-blue-400 hover:text-blue-300">
-                                    Privacy Policy
-                                </a>
-                            </p>
-                        </div>
                     </div>
                 </div>
             </div>
